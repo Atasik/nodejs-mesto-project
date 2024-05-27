@@ -1,0 +1,13 @@
+export const errServer = 'Произошла ошибка';
+export const errInvalidCardId = 'Передан некорректный _id карточки.';
+export const errInvalidCardData = 'Переданы некорректные данные при создании карточки.';
+export const errCardIdNotFound = 'Передан несуществующий _id карточки.';
+export const errInvalidUserData = 'Переданы некорректные данные при создании пользователя.';
+export const errInvalidUpdateUserData = 'Переданы некорректные данные при обновлении профиля.';
+export const errInvalidUpdateAvatarData = 'Переданы некорректные данные при обновлении аватара.';
+export const errInvalidUserId = 'Передан некорректный _id пользователя.';
+export const errUserIdNotFound = 'Пользователь по указанному _id не найден.';
+export const errServerCode = 500;
+export const errNotFoundCode = 404;
+export const errBadRequestCode = 400;
+export const statusCreatedCode = 201;
