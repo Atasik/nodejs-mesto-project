@@ -4,13 +4,13 @@ import mongoose from 'mongoose';
 import userRouter from './routes/users';
 import cardsRouter from './routes/cards';
 
-const { PORT = 3000} = process.env;
+const { PORT = 3000, MONGO_URI = 'mongodb://localhost:27017/mestodb'} = process.env;
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect(MONGO_URI);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   req.user = {

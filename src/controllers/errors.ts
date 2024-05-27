@@ -1,4 +1,4 @@
-export const errServer = 'Произошла ошибка';
+export const errServer = 'На сервере произошла ошибка';
 export const errInvalidCardId = 'Передан некорректный _id карточки.';
 export const errInvalidCardData = 'Переданы некорректные данные при создании карточки.';
 export const errCardIdNotFound = 'Передан несуществующий _id карточки.';
