@@ -40,5 +40,5 @@
         ],
         "no-underscore-dangle": ["error", { "allow": ["_id"] }]
     },
-    "ignorePatterns": ["src/types/*.ts"]
+    "ignorePatterns": ["src/types/express.d.ts"]
 }
