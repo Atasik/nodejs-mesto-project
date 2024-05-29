@@ -1,7 +1,7 @@
 {
   "name": "mesto",
   "version": "1.0.0",
-  "description": "< Добавьте описание проекта в свободной форме >",
+  "description": "Проект на гениальном node js, на котором душно прогать (в отличие от go) (шутка)",
   "main": "dist/app.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts",
@@ -13,9 +13,14 @@
   "author": "Yakovlev Alexey",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.19.33",
+    "@types/validator": "^13.11.10",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
@@ -24,8 +29,14 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "celebrate": "^15.0.3",
     "express": "^4.19.2",
-    "mongoose": "^6.12.9"
+    "express-winston": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^6.12.9",
+    "validator": "^13.12.0",
+    "winston": "^3.13.0"
   },
   "keywords": []
 }

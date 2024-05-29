@@ -1,55 +1,66 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Types } from 'mongoose';
 import Card from '../models/card';
 import {
-  errServerCode,
-  errServer,
-  errBadRequestCode,
   errInvalidCardData,
-  statusCreatedCode,
   errInvalidCardId,
-  errNotFoundCode,
   errCardIdNotFound,
-} from './errors';
+  errCardForbiddenToDelete,
+} from '../constants/errors';
+import { statusCreatedCode } from '../constants/status-codes';
+import BadRequestError from '../errors/bad-request';
+import NotFoundError from '../errors/not-found';
+import ForbiddenError from '../errors/forbidden';
 
-export const getCards = (req: Request, res: Response) => Card.find({})
+export const getCards = (_req: Request, res: Response, next: NextFunction) => Card.find({})
   .then((cards) => res.send(cards))
-  .catch(() => res.status(errServerCode).send({ message: errServer }));
+  .catch(next);
 
-export const createCard = (req: Request, res: Response) => {
+export const createCard = (req: Request, res: Response, next: NextFunction) => {
   const { name, link } = req.body;
 
   if (!name || !link) {
-    return res.status(errBadRequestCode).send({ message: errInvalidCardData });
+    throw new BadRequestError(errInvalidCardData);
   }
 
   return Card.create({ name, link, owner: req.user?._id })
     .then((card) => res.status(statusCreatedCode).send(card))
-    .catch(() => res.status(errServerCode).send({ message: errServer }));
+    .catch(next);
 };
 
-export const deleteCard = (req: Request, res: Response) => {
+export const deleteCard = (req: Request, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
 
   if (!Types.ObjectId.isValid(cardId)) {
-    return res.status(errBadRequestCode).send({ message: errInvalidCardId });
+    throw new BadRequestError(errInvalidCardId);
   }
 
-  return Card.findByIdAndDelete(cardId)
-    .then((deletedCard) => {
-      if (!deletedCard) {
-        return res.status(errNotFoundCode).send({ message: errCardIdNotFound });
+  return Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError(errCardIdNotFound);
       }
-      return res.send(deletedCard);
+
+      if (card.owner.toString() !== req.user?._id) {
+        throw new ForbiddenError(errCardForbiddenToDelete);
+      }
+
+      return Card.findByIdAndDelete(cardId)
+        .then((deletedCard) => {
+          if (!deletedCard) {
+            throw new NotFoundError(errCardIdNotFound);
+          }
+          return res.send(deletedCard);
+        });
     })
-    .catch(() => res.status(errServerCode).send({ message: errServer }));
+    .catch(next);
 };
 
-export const likeCard = (req: Request, res: Response) => {
+export const likeCard = (req: Request, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
 
   if (!Types.ObjectId.isValid(cardId)) {
-    return res.status(errBadRequestCode).send({ message: errInvalidCardId });
+    throw new BadRequestError(errInvalidCardId);
   }
 
   return Card.findByIdAndUpdate(
@@ -59,18 +70,18 @@ export const likeCard = (req: Request, res: Response) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(errNotFoundCode).send({ message: errCardIdNotFound });
+        throw new NotFoundError(errCardIdNotFound);
       }
       return res.send(updatedCard);
     })
-    .catch(() => res.status(errServerCode).send({ message: errServer }));
+    .catch(next);
 };
 
-export const dislikeCard = (req: Request, res: Response) => {
+export const dislikeCard = (req: Request, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
 
   if (!Types.ObjectId.isValid(cardId)) {
-    return res.status(errBadRequestCode).send({ message: errInvalidCardId });
+    throw new BadRequestError(errInvalidCardId);
   }
 
   return Card.findByIdAndUpdate(
@@ -80,9 +91,9 @@ export const dislikeCard = (req: Request, res: Response) => {
   )
     .then((updatedCard) => {
       if (!updatedCard) {
-        return res.status(errNotFoundCode).send({ message: errCardIdNotFound });
+        throw new NotFoundError(errCardIdNotFound);
       }
       return res.send(updatedCard);
     })
-    .catch(() => res.status(errServerCode).send({ message: errServer }));
+    .catch(next);
 };
