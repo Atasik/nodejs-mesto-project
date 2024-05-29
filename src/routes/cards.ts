@@ -2,14 +2,11 @@ import { Router } from 'express';
 import {
   likeCard, dislikeCard, deleteCard, createCard, getCards,
 } from '../controllers/cards';
-import auth from '../middlewares/auth';
 import {
   createCardValidation, deleteCardValidation, dislikeCardValidation, likeCardValidation,
 } from '../validation/card';
 
 const router = Router();
-
-router.use(auth);
 
 router.get('/', getCards);
 router.post('/', createCardValidation, createCard);

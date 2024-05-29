@@ -115,14 +115,8 @@ export const getUser = (req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 };
 
-export const updateUser = (req: Request, res: Response, next: NextFunction) => {
-  const { name, about } = req.body;
-
-  if (!name || !about) {
-    throw new BadRequestError(errInvalidUpdateUserData);
-  }
-
-  return User.findByIdAndUpdate(req.user?._id, { name, about }, { new: true })
+const updateUserData = (req: Request, res: Response, next: NextFunction, data: any) => {
+  User.findByIdAndUpdate(req.user?._id, data, { new: true })
     .then((updatedUser) => {
       if (!updatedUser) {
         throw new NotFoundError(errUserIdNotFound);
@@ -132,6 +126,16 @@ export const updateUser = (req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 };
 
+export const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  const { name, about } = req.body;
+
+  if (!name || !about) {
+    throw new BadRequestError(errInvalidUpdateUserData);
+  }
+
+  return updateUserData(req, res, next, { name, about });
+};
+
 export const updateUserAvatar = (req: Request, res: Response, next: NextFunction) => {
   const { avatar } = req.body;
 
@@ -139,12 +143,5 @@ export const updateUserAvatar = (req: Request, res: Response, next: NextFunction
     throw new BadRequestError(errInvalidUpdateAvatarData);
   }
 
-  return User.findByIdAndUpdate(req.user?._id, { avatar }, { new: true })
-    .then((updatedUser) => {
-      if (!updatedUser) {
-        throw new NotFoundError(errUserIdNotFound);
-      }
-      return res.send(updatedUser);
-    })
-    .catch(next);
+  return updateUserData(req, res, next, { avatar });
 };

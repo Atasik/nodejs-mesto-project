@@ -56,16 +56,20 @@ export const deleteCard = (req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 };
 
-export const likeCard = (req: Request, res: Response, next: NextFunction) => {
+const updateCardLike = (req: Request, res: Response, next: NextFunction, likeAction: boolean) => {
   const { cardId } = req.params;
 
   if (!Types.ObjectId.isValid(cardId)) {
     throw new BadRequestError(errInvalidCardId);
   }
 
+  const update = likeAction
+    ? { $addToSet: { likes: req.user?._id } }
+    : { $pull: { likes: req.user?._id } };
+
   return Card.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: req.user?._id } }, // добавить _id в массив, если его там нет
+    update,
     { new: true },
   )
     .then((updatedCard) => {
@@ -77,23 +81,10 @@ export const likeCard = (req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 };
 
+export const likeCard = (req: Request, res: Response, next: NextFunction) => {
+  updateCardLike(req, res, next, true);
+};
+
 export const dislikeCard = (req: Request, res: Response, next: NextFunction) => {
-  const { cardId } = req.params;
-
-  if (!Types.ObjectId.isValid(cardId)) {
-    throw new BadRequestError(errInvalidCardId);
-  }
-
-  return Card.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: req.user?._id } }, // убрать _id из массива
-    { new: true },
-  )
-    .then((updatedCard) => {
-      if (!updatedCard) {
-        throw new NotFoundError(errCardIdNotFound);
-      }
-      return res.send(updatedCard);
-    })
-    .catch(next);
+  updateCardLike(req, res, next, false);
 };
