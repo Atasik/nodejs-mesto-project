@@ -7,7 +7,7 @@ import { requestLogger, errorLogger } from './middlewares/logger';
 import { errors } from 'celebrate';
 import error from './middlewares/error';
 
-export const { PORT = 3000, MONGO_URI = 'mongodb://localhost:27017/mestodb'} = process.env;
+const { PORT = 3000, MONGO_URI = 'mongodb://localhost:27017/mestodb'} = process.env;
 const app = express();
 
 app.use(express.json());

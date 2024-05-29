@@ -1,10 +1,10 @@
 {
   "name": "mesto",
   "version": "1.0.0",
-  "description": "< Добавьте описание проекта в свободной форме >",
+  "description": "Проект на гениальном node js, на котором душно прогать (в отличие от go) (шутка)",
   "main": "dist/app.js",
   "scripts": {
-    "lint": "npx eslint --fix src/**/*.ts",
+    "lint": "npx eslint src/**/*.ts",
     "build": "tsc",
     "dev": "ts-node-dev --files src/app.ts",
     "start": "ts-node --files src/app.ts",
